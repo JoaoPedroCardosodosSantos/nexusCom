@@ -12,6 +12,8 @@
 
 #include "mensagens/filaMensagem.h"
 
+#include "lora/loraService.h"
+
 Teclado teclado;
 
 T9 t9;
@@ -19,6 +21,8 @@ T9 t9;
 Editor editor;
 
 FilaMensagem filaEnvio;
+
+LoRaService lora;
 
 void mostrarMensagem()
 {
@@ -64,7 +68,7 @@ void enviarMensagem()
     )
     {
         Serial.print(
-            "ENVIADA: "
+            "FILA TX: "
         );
 
         Serial.println(
@@ -83,6 +87,27 @@ void enviarMensagem()
     }
 }
 
+void processarFila()
+{
+    if(
+        lora.ocupado()
+    )
+    {
+        return;
+    }
+
+    Mensagem msg;
+
+    if(
+        filaEnvio.obter(
+            msg
+        )
+    )
+    {
+        lora.enviar(msg);
+    }
+}
+
 void setup()
 {
     Serial.begin(9600);
@@ -92,6 +117,10 @@ void setup()
 
 void loop()
 {
+    lora.atualizar();
+
+    processarFila();
+
     char tecla=
         teclado.ler();
 
