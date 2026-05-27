@@ -1,76 +1,105 @@
 #include "teclado.h"
 
-#include "../config/pinos.h"
-
 #include "keymap.h"
 
-Teclado::Teclado()
-{
-    linhas[0] = LINHA1;
-    linhas[1] = LINHA2;
-    linhas[2] = LINHA3;
-    linhas[3] = LINHA4;
+Teclado::Teclado() :
 
-    colunas[0] = COLUNA1;
-    colunas[1] = COLUNA2;
-    colunas[2] = COLUNA3;
-    colunas[3] = COLUNA4;
+pcf(0x20)
+
+{
+    estadoAnterior=false;
 }
 
 void Teclado::iniciar()
 {
-    for(int i=0;i<4;i++)
-    {
-        pinMode(
-            linhas[i],
-            OUTPUT
-        );
+    pcf.iniciar();
+}
 
-        digitalWrite(
-            linhas[i],
-            HIGH
-        );
+bool Teclado::pressionado()
+{
+    for(int linha=0; linha<4; linha++)
+    {
+        uint8_t estado=0xFF;
+
+        estado &= ~(1<<linha);
+
+        pcf.escrever(estado);
+
+        delayMicroseconds(100);
+
+        uint8_t leitura=
+            pcf.ler();
+
+        for(int coluna=0; coluna<4; coluna++)
+        {
+            int bit=coluna+4;
+
+            if(
+                !(leitura &
+                (1<<bit))
+            )
+            {
+                return true;
+            }
+        }
     }
 
-    for(int i=0;i<4;i++)
-    {
-        pinMode(
-            colunas[i],
-            INPUT_PULLUP
-        );
-    }
+    return false;
 }
 
 char Teclado::ler()
 {
-    for(int l=0;l<4;l++)
-    {
-        digitalWrite(
-            linhas[l],
-            LOW
-        );
+    bool atual=
+        pressionado();
 
-        for(int c=0;c<4;c++)
+    if(
+        atual &&
+        estadoAnterior
+    )
+    {
+        return 0;
+    }
+
+    if(
+        !atual
+    )
+    {
+        estadoAnterior=false;
+
+        return 0;
+    }
+
+    estadoAnterior=true;
+
+    for(int linha=0; linha<4; linha++)
+    {
+        uint8_t estado=0xFF;
+
+        estado &= ~(1<<linha);
+
+        pcf.escrever(estado);
+
+        delayMicroseconds(100);
+
+        uint8_t leitura=
+            pcf.ler();
+
+        for(int coluna=0; coluna<4; coluna++)
         {
+            int bit=coluna+4;
+
             if(
-                digitalRead(
-                    colunas[c]
-                ) == LOW
+                !(leitura &
+                (1<<bit))
             )
             {
-                digitalWrite(
-                    linhas[l],
-                    HIGH
-                );
-
-                return mapa[l][c];
+                return mapa[
+                    linha
+                ][
+                    coluna
+                ];
             }
         }
-
-        digitalWrite(
-            linhas[l],
-            HIGH
-        );
     }
 
     return 0;

@@ -3,13 +3,15 @@
 
 #include <Arduino.h>
 
+#include "pcf8574.h"
+
 class Teclado
 {
 private:
 
-    byte linhas[4];
+    PCF8574 pcf;
 
-    byte colunas[4];
+    bool estadoAnterior;
 
 public:
 
@@ -18,6 +20,8 @@ public:
     void iniciar();
 
     char ler();
+
+    bool pressionado();
 };
 
 #endif
