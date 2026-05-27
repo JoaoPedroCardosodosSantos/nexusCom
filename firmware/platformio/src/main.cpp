@@ -1,16 +1,24 @@
 #include <Arduino.h>
 
+#include <string.h>
+
 #include "teclado/teclado.h"
 
 #include "teclado/t9.h"
 
 #include "teclado/editor.h"
 
+#include "mensagens/mensagem.h"
+
+#include "mensagens/filaMensagem.h"
+
 Teclado teclado;
 
 T9 t9;
 
 Editor editor;
+
+FilaMensagem filaEnvio;
 
 void mostrarMensagem()
 {
@@ -21,6 +29,58 @@ void mostrarMensagem()
     Serial.println(
         editor.obter()
     );
+}
+
+void enviarMensagem()
+{
+    if(
+        editor.vazio()
+    )
+    {
+        Serial.println(
+            "MSG VAZIA"
+        );
+
+        return;
+    }
+
+    Mensagem msg;
+
+    strcpy(
+        msg.texto,
+        editor.obter()
+    );
+
+    msg.remetente=1;
+
+    msg.destinatario=2;
+
+    msg.confirmada=false;
+
+    if(
+        filaEnvio.adicionar(
+            msg
+        )
+    )
+    {
+        Serial.print(
+            "ENVIADA: "
+        );
+
+        Serial.println(
+            msg.texto
+        );
+
+        editor.limpar();
+
+        t9.confirmar();
+    }
+    else
+    {
+        Serial.println(
+            "FILA CHEIA"
+        );
+    }
 }
 
 void setup()
@@ -114,6 +174,13 @@ void loop()
             editor.limpar();
 
             mostrarMensagem();
+
+            break;
+        }
+
+        case 'A':
+        {
+            enviarMensagem();
 
             break;
         }
