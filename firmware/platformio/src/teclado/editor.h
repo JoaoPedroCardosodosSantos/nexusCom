@@ -17,6 +17,12 @@ public:
 
     void substituirUltimo(char c);
 
+    void apagarUltimo();
+
+    void limpar();
+
+    void espaco();
+
     const char* obter();
 };
 

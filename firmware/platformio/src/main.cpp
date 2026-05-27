@@ -12,6 +12,17 @@ T9 t9;
 
 Editor editor;
 
+void mostrarMensagem()
+{
+    Serial.print(
+        "MSG: "
+    );
+
+    Serial.println(
+        editor.obter()
+    );
+}
+
 void setup()
 {
     Serial.begin(9600);
@@ -55,12 +66,47 @@ void loop()
             );
         }
 
-        Serial.print(
-            "MSG: "
-        );
+        mostrarMensagem();
 
-        Serial.println(
-            editor.obter()
-        );
+        return;
+    }
+
+    switch(tecla)
+    {
+        case '*':
+        {
+            editor.apagarUltimo();
+
+            mostrarMensagem();
+
+            break;
+        }
+
+        case '0':
+        {
+            editor.espaco();
+
+            mostrarMensagem();
+
+            break;
+        }
+
+        case 'B':
+        {
+            editor.limpar();
+
+            mostrarMensagem();
+
+            break;
+        }
+
+        case '#':
+        {
+            Serial.println(
+                "CONFIRMADO"
+            );
+
+            break;
+        }
     }
 }

@@ -9,6 +9,9 @@ Editor::Editor()
 
 void Editor::inserir(char c)
 {
+    if(cursor>=64)
+        return;
+
     texto[cursor]=c;
 
     cursor++;
@@ -28,6 +31,28 @@ void Editor::substituirUltimo(
     }
 
     texto[cursor-1]=c;
+}
+
+void Editor::apagarUltimo()
+{
+    if(cursor<=0)
+        return;
+
+    cursor--;
+
+    texto[cursor]='\0';
+}
+
+void Editor::limpar()
+{
+    cursor=0;
+
+    texto[0]='\0';
+}
+
+void Editor::espaco()
+{
+    inserir(' ');
 }
 
 const char* Editor::obter()
