@@ -23,6 +23,8 @@ public:
 
     void espaco();
 
+    bool vazio();
+
     const char* obter();
 };
 

@@ -55,6 +55,11 @@ void Editor::espaco()
     inserir(' ');
 }
 
+bool Editor::vazio()
+{
+    return cursor==0;
+}
+
 const char* Editor::obter()
 {
     return texto;

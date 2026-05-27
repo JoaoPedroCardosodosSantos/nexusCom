@@ -13,6 +13,8 @@ private:
 
     uint32_t ultimoTempo;
 
+    bool composicaoAtiva;
+
 public:
 
     T9();
@@ -20,6 +22,10 @@ public:
     bool mesmaSequencia(char tecla);
 
     char converter(char tecla);
+
+    void confirmar();
+
+    bool emComposicao();
 };
 
 #endif

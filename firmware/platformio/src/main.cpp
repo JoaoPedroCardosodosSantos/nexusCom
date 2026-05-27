@@ -53,7 +53,10 @@ void loop()
                 tecla
             );
 
-        if(repetir)
+        if(
+            repetir &&
+            !editor.vazio()
+        )
         {
             editor.substituirUltimo(
                 letra
@@ -73,6 +76,17 @@ void loop()
 
     switch(tecla)
     {
+        case '#':
+        {
+            t9.confirmar();
+
+            Serial.println(
+                "CONFIRMADO"
+            );
+
+            break;
+        }
+
         case '*':
         {
             editor.apagarUltimo();
@@ -84,6 +98,8 @@ void loop()
 
         case '0':
         {
+            t9.confirmar();
+
             editor.espaco();
 
             mostrarMensagem();
@@ -93,18 +109,11 @@ void loop()
 
         case 'B':
         {
+            t9.confirmar();
+
             editor.limpar();
 
             mostrarMensagem();
-
-            break;
-        }
-
-        case '#':
-        {
-            Serial.println(
-                "CONFIRMADO"
-            );
 
             break;
         }

@@ -23,17 +23,21 @@ T9::T9()
     indice=0;
 
     ultimoTempo=0;
+
+    composicaoAtiva=false;
 }
 
 bool T9::mesmaSequencia(
     char tecla
 )
 {
-    uint32_t agora=millis();
+    uint32_t agora=
+        millis();
 
     if(
         tecla==ultimaTecla &&
-        (agora-ultimoTempo)<TEMPO_T9
+        (agora-ultimoTempo)<TEMPO_T9 &&
+        composicaoAtiva
     )
     {
         indice++;
@@ -49,10 +53,14 @@ bool T9::mesmaSequencia(
 
     ultimoTempo=agora;
 
+    composicaoAtiva=true;
+
     return false;
 }
 
-char T9::converter(char tecla)
+char T9::converter(
+    char tecla
+)
 {
     int n=tecla-'0';
 
@@ -68,4 +76,18 @@ char T9::converter(char tecla)
     return grupo[
         indice%tam
     ];
+}
+
+void T9::confirmar()
+{
+    composicaoAtiva=false;
+
+    ultimaTecla=0;
+
+    indice=0;
+}
+
+bool T9::emComposicao()
+{
+    return composicaoAtiva;
 }
