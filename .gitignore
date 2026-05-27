@@ -1,0 +1,23 @@
+# PlatformIO
+
+firmware/platformio/.pio/
+
+# VS Code
+
+firmware/platformio/.vscode/
+
+# Build
+
+*.o
+*.elf
+*.bin
+*.hex
+
+# Linux
+
+*~
+*.swp
+
+# Logs
+
+*.log
