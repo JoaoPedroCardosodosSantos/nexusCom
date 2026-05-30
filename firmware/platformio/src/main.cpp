@@ -110,7 +110,7 @@ void loop()
         // Apenas tela de mensagens aceita digitação
         if(telaAtual == TELA_MENSAGENS)
         {
-            if(tecla >= '2' && tecla <= '9')
+            if(tecla >= '1' && tecla <= '9')
             {
                 bool mesma =
                     t9.mesmaSequencia(tecla);

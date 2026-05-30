@@ -5,7 +5,7 @@
 const char* mapaT9[] =
 {
     "",
-    "",
+    ".,!?'",
     "ABC",
     "DEF",
     "GHI",
