@@ -3,4 +3,7 @@
 
 void drawHomeScreen();
 
+void addRX(const char* msg);
+void addTX(const char* msg);
+
 #endif
