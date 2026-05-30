@@ -12,7 +12,7 @@ uint16_t txCount = 0;
 void drawMessages()
 {
     // Limpa área de mensagens
-    tft.fillRect(2, 27, 236, 266, ST77XX_BLACK);
+    tft.fillRect(2, 27, 236, 230, ST77XX_BLACK);
 
     tft.setTextColor(ST77XX_WHITE);
     tft.setTextSize(1);
@@ -86,6 +86,9 @@ void drawHomeScreen()
     // Footer
     drawStatusBar();
 
+    // Editor de texto
+    drawEditor("");
+
     // Mensagens de teste
     addRX("Sistema iniciado");
     addTX("Teste");
@@ -106,4 +109,42 @@ void drawStatusBar()
     tft.setCursor(180, 303);
     tft.print("TX:");
     tft.print(txCount);
+}
+
+void drawEditor(const char* texto)
+{
+    // fundo do editor
+
+    tft.fillRect(
+        0,
+        260,
+        240,
+        35,
+        ST77XX_BLACK
+    );
+
+    // borda
+
+    tft.drawRect(
+        0,
+        260,
+        240,
+        35,
+        ST77XX_WHITE
+    );
+
+    tft.setTextColor(
+        ST77XX_YELLOW
+    );
+
+    tft.setTextSize(1);
+
+    tft.setCursor(
+        5,
+        272
+    );
+
+    tft.print(">");
+
+    tft.print(texto);
 }
