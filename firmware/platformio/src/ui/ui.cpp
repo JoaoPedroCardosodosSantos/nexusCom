@@ -6,6 +6,9 @@
 String mensagens[MAX_MSG];
 uint8_t totalMensagens = 0;
 
+uint16_t rxCount = 0;
+uint16_t txCount = 0;
+
 void drawMessages()
 {
     // Limpa área de mensagens
@@ -45,12 +48,20 @@ void addMessage(String msg)
 
 void addRX(const char* msg)
 {
+    rxCount++;
+
     addMessage("RX> " + String(msg));
+
+    drawStatusBar();
 }
 
 void addTX(const char* msg)
 {
+    txCount++;
+
     addMessage("TX> " + String(msg));
+
+    drawStatusBar();
 }
 
 void drawHomeScreen()
@@ -73,16 +84,26 @@ void drawHomeScreen()
     tft.drawRect(0, 25, 240, 270, ST77XX_WHITE);
 
     // Footer
-    tft.fillRect(0, 295, 240, 25, ST77XX_BLUE);
-
-    tft.setCursor(5, 303);
-    tft.print("RX:0");
-
-    tft.setCursor(190, 303);
-    tft.print("TX:0");
+    drawStatusBar();
 
     // Mensagens de teste
     addRX("Sistema iniciado");
     addTX("Teste");
     addRX("ACK");
+}
+
+void drawStatusBar()
+{
+    tft.fillRect(0, 295, 240, 25, ST77XX_BLUE);
+
+    tft.setTextColor(ST77XX_WHITE);
+    tft.setTextSize(1);
+
+    tft.setCursor(5, 303);
+    tft.print("RX:");
+    tft.print(rxCount);
+
+    tft.setCursor(180, 303);
+    tft.print("TX:");
+    tft.print(txCount);
 }

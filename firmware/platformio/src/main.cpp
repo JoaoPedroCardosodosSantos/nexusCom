@@ -5,6 +5,8 @@ void setup()
 {
     initDisplay();
     drawHomeScreen();
+    addTX("Mensagem 2");
+    addRX("Recebido");
 }
 
 void loop()
