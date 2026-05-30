@@ -48,7 +48,23 @@ void loop()
                 editor.obter()
             );
         }
+        else if(tecla == '#')
+        {
+          if(!editor.vazio())
+          {
+              addTX(
+                  editor.obter()
+              );
 
+              editor.limpar();
+
+              t9.confirmar();
+
+              drawEditor(
+                  editor.obter()
+              );
+          }
+        }
         else if(tecla == '*')
         {
             editor.apagarUltimo();
