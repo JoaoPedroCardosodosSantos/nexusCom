@@ -8,6 +8,9 @@ Teclado teclado;
 Editor editor;
 T9 t9;
 
+unsigned long respostaTempo = 0;
+bool respostaPendente = false;
+
 void setup()
 {
     initDisplay();
@@ -48,23 +51,7 @@ void loop()
                 editor.obter()
             );
         }
-        else if(tecla == '#')
-        {
-          if(!editor.vazio())
-          {
-              addTX(
-                  editor.obter()
-              );
 
-              editor.limpar();
-
-              t9.confirmar();
-
-              drawEditor(
-                  editor.obter()
-              );
-          }
-        }
         else if(tecla == '*')
         {
             editor.apagarUltimo();
@@ -86,5 +73,37 @@ void loop()
                 editor.obter()
             );
         }
+
+        else if(tecla == '#')
+        {
+            if(!editor.vazio())
+            {
+                addTX(
+                    editor.obter()
+                );
+
+                respostaTempo = millis();
+                respostaPendente = true;
+
+                editor.limpar();
+
+                t9.confirmar();
+
+                drawEditor(
+                    editor.obter()
+                );
+            }
+        }
+    }
+
+    // Simulação de resposta LoRa
+    if(
+        respostaPendente &&
+        millis() - respostaTempo > 2000
+    )
+    {
+        addRX("ACK");
+
+        respostaPendente = false;
     }
 }
