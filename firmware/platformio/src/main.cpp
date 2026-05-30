@@ -3,7 +3,8 @@
 #include "teclado/teclado.h"
 #include "teclado/editor.h"
 #include "teclado/t9.h"
-
+#include "ui/screens.h"
+#include "ui/menu.h"
 Teclado teclado;
 Editor editor;
 T9 t9;
@@ -94,7 +95,28 @@ void loop()
                 );
             }
         }
-    }
+        if(tecla == 'D')
+        {
+          if(telaAtual == TELA_MENSAGENS)
+          {
+              telaAtual = TELA_MENU;
+
+              drawMenu();
+          }
+          else
+          {
+              telaAtual = TELA_MENSAGENS;
+
+              drawHomeScreen();
+
+              drawEditor(
+                  editor.obter()
+              );
+          }
+
+          return;
+        }
+  }
 
     // Simulação de resposta LoRa
     if(
