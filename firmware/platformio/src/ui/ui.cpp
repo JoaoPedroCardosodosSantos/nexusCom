@@ -1,6 +1,9 @@
 #include "ui.h"
 #include "../display/display.h"
 
+#include "../model/contato.h"
+#include "../model/contato_atual.h"
+
 #define MAX_MSG 8
 
 String mensagens[MAX_MSG];
@@ -77,8 +80,12 @@ void drawHomeScreen()
     tft.setCursor(5, 8);
     tft.print("NexusCom");
 
-    tft.setCursor(170, 8);
-    tft.print("LoRa SIM");
+    tft.setCursor(150, 8);
+    tft.print(
+        contatos[
+            contatoSelecionado
+        ].nome
+    );
 
     // Área principal
     tft.drawRect(0, 25, 240, 270, ST77XX_WHITE);
