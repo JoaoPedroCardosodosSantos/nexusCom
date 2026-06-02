@@ -1,16 +1,13 @@
 #include <Arduino.h>
-
+#include "ui/boot.h"
 #include "display/display.h"
-
 #include "ui/ui.h"
 #include "ui/menu.h"
 #include "ui/screens.h"
-
 #include "ui/screens/contatos.h"
 #include "ui/screens/configuracoes.h"
 #include "ui/screens/status.h"
 #include "ui/screens/sobre.h"
-
 #include "teclado/teclado.h"
 #include "teclado/editor.h"
 #include "teclado/t9.h"
@@ -27,6 +24,8 @@ bool respostaPendente = false;
 void setup()
 {
     initDisplay();
+
+    bootAnimation();
 
     teclado.iniciar();
 
