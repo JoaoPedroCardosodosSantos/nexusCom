@@ -7,6 +7,9 @@ void addRX(const char* msg);
 void addTX(const char* msg);
 
 void drawStatusBar();
-void drawEditor(const char* texto);
+void drawEditor(
+    const char* texto,
+    bool modoNumerico
+);
 
 #endif

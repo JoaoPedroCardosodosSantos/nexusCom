@@ -87,7 +87,10 @@ void drawHomeScreen()
     drawStatusBar();
 
     // Editor de texto
-    drawEditor("");
+    drawEditor(
+        "",
+        false
+    );
 
     // Mensagens de teste
     addRX("Sistema iniciado");
@@ -111,9 +114,12 @@ void drawStatusBar()
     tft.print(txCount);
 }
 
-void drawEditor(const char* texto)
+void drawEditor(
+    const char* texto,
+    bool modoNumerico
+)
 {
-    // fundo do editor
+    // fundo
 
     tft.fillRect(
         0,
@@ -139,6 +145,8 @@ void drawEditor(const char* texto)
 
     tft.setTextSize(1);
 
+    // texto digitado
+
     tft.setCursor(
         5,
         272
@@ -147,4 +155,24 @@ void drawEditor(const char* texto)
     tft.print(">");
 
     tft.print(texto);
+
+    // indicador de modo
+
+    tft.setTextColor(
+        ST77XX_CYAN
+    );
+
+    tft.setCursor(
+        205,
+        272
+    );
+
+    if(modoNumerico)
+    {
+        tft.print("123");
+    }
+    else
+    {
+        tft.print("ABC");
+    }
 }

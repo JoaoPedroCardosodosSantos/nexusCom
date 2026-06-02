@@ -19,6 +19,8 @@ Teclado teclado;
 Editor editor;
 T9 t9;
 
+bool modoNumerico = false;
+
 unsigned long respostaTempo = 0;
 bool respostaPendente = false;
 
@@ -30,7 +32,10 @@ void setup()
 
     drawHomeScreen();
 
-    drawEditor("");
+    drawEditor(
+        "",
+        modoNumerico
+    );
 }
 
 void loop()
@@ -49,7 +54,8 @@ void loop()
                 drawHomeScreen();
 
                 drawEditor(
-                    editor.obter()
+                    editor.obter(),
+                    modoNumerico
                 );
             }
             else
@@ -62,7 +68,27 @@ void loop()
             return;
         }
 
-        // SELEÇÃO DE TELAS
+        // Atalho Contatos
+        if(tecla == 'A')
+        {
+            telaAtual = TELA_CONTATOS;
+
+            drawContatos();
+
+            return;
+        }
+
+        // Atalho Status LoRa
+        if(tecla == 'B')
+        {
+            telaAtual = TELA_STATUS;
+
+            drawStatus();
+
+            return;
+        }
+
+        // Navegação do menu
         if(telaAtual == TELA_MENU)
         {
             if(tecla == '1')
@@ -72,31 +98,28 @@ void loop()
                 drawHomeScreen();
 
                 drawEditor(
-                    editor.obter()
+                    editor.obter(),
+                    modoNumerico
                 );
             }
-
             else if(tecla == '2')
             {
                 telaAtual = TELA_CONTATOS;
 
                 drawContatos();
             }
-
             else if(tecla == '3')
             {
                 telaAtual = TELA_CONFIGURACOES;
 
                 drawConfiguracoes();
             }
-
             else if(tecla == '4')
             {
                 telaAtual = TELA_STATUS;
 
                 drawStatus();
             }
-
             else if(tecla == '5')
             {
                 telaAtual = TELA_SOBRE;
@@ -107,46 +130,24 @@ void loop()
             return;
         }
 
-        // Apenas tela de mensagens aceita digitação
+        // Digitação apenas na tela principal
         if(telaAtual == TELA_MENSAGENS)
         {
-            if(tecla >= '1' && tecla <= '9')
+            // Alterna ABC / 123
+            if(tecla == '*')
             {
-                bool mesma =
-                    t9.mesmaSequencia(tecla);
-
-                char letra =
-                    t9.converter(tecla);
-
-                if(mesma)
-                {
-                    editor.substituirUltimo(
-                        letra
-                    );
-                }
-                else
-                {
-                    editor.inserir(
-                        letra
-                    );
-                }
-
-                drawEditor(
-                    editor.obter()
-                );
-            }
-
-            else if(tecla == '*')
-            {
-                editor.apagarUltimo();
+                modoNumerico =
+                    !modoNumerico;
 
                 t9.confirmar();
 
                 drawEditor(
-                    editor.obter()
+                    editor.obter(),
+                    modoNumerico
                 );
             }
 
+            // Espaço
             else if(tecla == '0')
             {
                 editor.espaco();
@@ -154,10 +155,25 @@ void loop()
                 t9.confirmar();
 
                 drawEditor(
-                    editor.obter()
+                    editor.obter(),
+                    modoNumerico
                 );
             }
 
+            // Apagar
+            else if(tecla == 'C')
+            {
+                editor.apagarUltimo();
+
+                t9.confirmar();
+
+                drawEditor(
+                    editor.obter(),
+                    modoNumerico
+                );
+            }
+
+            // Enviar
             else if(tecla == '#')
             {
                 if(!editor.vazio())
@@ -177,14 +193,69 @@ void loop()
                     t9.confirmar();
 
                     drawEditor(
-                        editor.obter()
+                        editor.obter(),
+                        modoNumerico
                     );
+                }
+            }
+
+            // Teclas 1..9
+            else if(
+                tecla >= '1' &&
+                tecla <= '9'
+            )
+            {
+                if(modoNumerico)
+                {
+                    editor.inserir(
+                        tecla
+                    );
+
+                    t9.confirmar();
+
+                    drawEditor(
+                        editor.obter(),
+                        modoNumerico
+                    );
+                }
+                else
+                {
+                    bool mesma =
+                        t9.mesmaSequencia(
+                            tecla
+                        );
+
+                    char letra =
+                        t9.converter(
+                            tecla
+                        );
+
+                    if(letra)
+                    {
+                        if(mesma)
+                        {
+                            editor.substituirUltimo(
+                                letra
+                            );
+                        }
+                        else
+                        {
+                            editor.inserir(
+                                letra
+                            );
+                        }
+
+                        drawEditor(
+                            editor.obter(),
+                            modoNumerico
+                        );
+                    }
                 }
             }
         }
     }
 
-    // Simulação de resposta LoRa
+    // Resposta simulada LoRa
     if(
         respostaPendente &&
         millis() - respostaTempo > 2000
@@ -192,6 +263,7 @@ void loop()
     {
         addRX("ACK");
 
-        respostaPendente = false;
+        respostaPendente =
+            false;
     }
 }
