@@ -1,5 +1,5 @@
-#ifndef CONTATOS_H
-#define CONTATOS_H
+#ifndef CONTATOS_SCREEN_H
+#define CONTATOS_SCREEN_H
 
 void drawContatos();
 
