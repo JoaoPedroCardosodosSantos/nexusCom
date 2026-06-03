@@ -17,8 +17,47 @@ void Dispatcher::processar()
         fila.pop(e)
     )
     {
-        Serial.println(
-            e.tecla
-        );
+        switch(e.tipo)
+        {
+            case EVENTO_TECLA:
+
+                Serial.print(
+                    "TECLA: "
+                );
+
+                Serial.println(
+                    e.tecla
+                );
+
+                break;
+
+            case EVENTO_TX:
+
+                Serial.println(
+                    "TX"
+                );
+
+                break;
+
+            case EVENTO_RX:
+
+                Serial.println(
+                    "RX"
+                );
+
+                break;
+
+            case EVENTO_CONTATO_TROCADO:
+
+                Serial.println(
+                    "CONTATO"
+                );
+
+                break;
+
+            default:
+
+                break;
+        }
     }
 }

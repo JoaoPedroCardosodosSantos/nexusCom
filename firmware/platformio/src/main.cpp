@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+#include "core/dispatcher.h"
 #include "core/sistema.h"
 #include "ui/boot.h"
 
@@ -19,6 +20,7 @@
 
 #include "model/contato.h"
 
+Dispatcher dispatcher;
 Teclado teclado;
 Editor editor;
 T9 t9;
@@ -156,6 +158,18 @@ void loop()
                 sistema.contatoSelecionado =
                     tecla - '1';
 
+                Evento evento;
+
+                evento.tipo =
+                    EVENTO_CONTATO_TROCADO;
+
+                evento.tecla =
+                    tecla;
+
+                dispatcher.adicionar(
+                    evento
+                );
+
                 telaAtual =
                     TELA_MENSAGENS;
 
@@ -262,6 +276,17 @@ void loop()
                         editor.obter()
                     );
 
+                    Evento evento;
+
+                    evento.tipo =
+                        EVENTO_TX;
+
+                    evento.tecla = 0;
+
+                    dispatcher.adicionar(
+                        evento
+                    );
+
                     respostaTempo =
                         millis();
 
@@ -304,7 +329,21 @@ void loop()
     {
         addRX("ACK");
 
+        Evento evento;
+
+        evento.tipo =
+            EVENTO_RX;
+
+        evento.tecla = 0;
+
+        dispatcher.adicionar(
+            evento
+        );
+
         respostaPendente =
             false;
     }
+
+    dispatcher.processar();
+
 }
