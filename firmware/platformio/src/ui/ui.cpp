@@ -2,15 +2,13 @@
 #include "../display/display.h"
 #include "../core/sistema.h"
 #include "../model/contato.h"
-#include "../model/contato_atual.h"
+#include "../core/sistema.h"
 
 #define MAX_MSG 8
 
 String mensagens[MAX_MSG];
 uint8_t totalMensagens = 0;
 
-uint16_t rxCount = 0;
-uint16_t txCount = 0;
 
 void drawMessages()
 {
@@ -51,7 +49,7 @@ void addMessage(String msg)
 
 void addRX(const char* msg)
 {
-    rxCount++;
+    sistema.rxCount++;
 
     addMessage("RX> " + String(msg));
 
@@ -60,7 +58,7 @@ void addRX(const char* msg)
 
 void addTX(const char* msg)
 {
-    txCount++;
+    sistema.txCount++;
 
     addMessage("TX> " + String(msg));
 
@@ -83,7 +81,7 @@ void drawHomeScreen()
     tft.setCursor(150, 8);
     tft.print(
         contatos[
-            contatoSelecionado
+            sistema.contatoSelecionado
         ].nome
     );
 
@@ -119,11 +117,15 @@ void drawStatusBar()
 
     tft.setCursor(5, 303);
     tft.print("RX:");
-    tft.print(rxCount);
+    tft.print(
+        sistema.rxCount
+    );
 
     tft.setCursor(180, 303);
     tft.print("TX:");
-    tft.print(txCount);
+    tft.print(
+        sistema.txCount
+    );
 }
 
 void drawEditor(

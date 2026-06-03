@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+#include "core/sistema.h"
 #include "ui/boot.h"
 
 #include "display/display.h"
@@ -17,13 +18,10 @@
 #include "teclado/t9.h"
 
 #include "model/contato.h"
-#include "model/contato_atual.h"
 
 Teclado teclado;
 Editor editor;
 T9 t9;
-
-bool modoNumerico = false;
 
 unsigned long respostaTempo = 0;
 bool respostaPendente = false;
@@ -42,7 +40,7 @@ void setup()
 
     drawEditor(
         "",
-        modoNumerico
+        sistema.modoNumerico
     );
 }
 
@@ -88,7 +86,7 @@ void loop()
 
                 drawEditor(
                     editor.obter(),
-                    modoNumerico
+                    sistema.modoNumerico
                 );
             }
             else
@@ -115,7 +113,7 @@ void loop()
 
                 drawEditor(
                     editor.obter(),
-                    modoNumerico
+                    sistema.modoNumerico
                 );
             }
             else if(tecla == '2')
@@ -155,7 +153,7 @@ void loop()
             if(tecla >= '1' &&
                tecla <= '0' + TOTAL_CONTATOS)
             {
-                contatoSelecionado =
+                sistema.contatoSelecionado =
                     tecla - '1';
 
                 telaAtual =
@@ -165,7 +163,7 @@ void loop()
 
                 drawEditor(
                     editor.obter(),
-                    modoNumerico
+                    sistema.modoNumerico
                 );
             }
 
@@ -181,7 +179,7 @@ void loop()
             if(tecla >= '1' &&
                tecla <= '9')
             {
-                if(modoNumerico)
+                if(sistema.modoNumerico)
                 {
                     editor.inserir(
                         tecla
@@ -191,7 +189,7 @@ void loop()
 
                     drawEditor(
                         editor.obter(),
-                        modoNumerico
+                        sistema.modoNumerico
                     );
                 }
                 else
@@ -221,25 +219,25 @@ void loop()
 
                     drawEditor(
                         editor.obter(),
-                        modoNumerico
+                        sistema.modoNumerico
                     );
                 }
             }
 
             else if(tecla == '*')
             {
-                modoNumerico =
-                    !modoNumerico;
+                sistema.modoNumerico =
+                    !sistema.modoNumerico;
 
                 drawEditor(
                     editor.obter(),
-                    modoNumerico
+                    sistema.modoNumerico
                 );
             }
 
             else if(tecla == '0')
             {
-                if(modoNumerico)
+                if(sistema.modoNumerico)
                 {
                     editor.inserir('0');
                 }
@@ -252,7 +250,7 @@ void loop()
 
                 drawEditor(
                     editor.obter(),
-                    modoNumerico
+                    sistema.modoNumerico
                 );
             }
 
@@ -276,7 +274,7 @@ void loop()
 
                     drawEditor(
                         editor.obter(),
-                        modoNumerico
+                        sistema.modoNumerico
                     );
                 }
             }
@@ -289,7 +287,7 @@ void loop()
 
                 drawEditor(
                     editor.obter(),
-                    modoNumerico
+                    sistema.modoNumerico
                 );
             }
         }
