@@ -1,6 +1,6 @@
 #include "ui.h"
 #include "../display/display.h"
-
+#include "../core/sistema.h"
 #include "../model/contato.h"
 #include "../model/contato_atual.h"
 
@@ -98,11 +98,16 @@ void drawHomeScreen()
         "",
         false
     );
+}
 
-    // Mensagens de teste
+void inicializarSistema()
+{
+    if(sistema.iniciado)
+        return;
+
     addRX("Sistema iniciado");
-    addTX("Teste");
-    addRX("ACK");
+
+    sistema.iniciado = true;
 }
 
 void drawStatusBar()

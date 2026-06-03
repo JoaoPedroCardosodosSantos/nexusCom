@@ -2,6 +2,7 @@
 #define UI_H
 
 void drawHomeScreen();
+void inicializarSistema();
 
 void addRX(const char* msg);
 void addTX(const char* msg);

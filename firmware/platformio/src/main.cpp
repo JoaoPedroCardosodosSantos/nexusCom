@@ -38,6 +38,8 @@ void setup()
 
     drawHomeScreen();
 
+    inicializarSistema();
+
     drawEditor(
         "",
         modoNumerico
