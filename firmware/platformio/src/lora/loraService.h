@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#include "../mensagens/mensagem.h"
+#include "../model/mensagem.h"
 
 class LoRaService
 {

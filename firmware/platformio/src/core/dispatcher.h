@@ -2,18 +2,19 @@
 #define DISPATCHER_H
 
 #include "../eventos/evento.h"
-
 #include "fila.h"
 
 class Dispatcher
 {
 private:
 
-    FilaCircular<Evento,32> fila;
+    FilaCircular<Evento, 32> fila;
 
 public:
 
-    void adicionar(Evento e);
+    bool adicionar(
+        const Evento& evento
+    );
 
     void processar();
 };

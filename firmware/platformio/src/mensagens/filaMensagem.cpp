@@ -1,45 +1,126 @@
 #include "filaMensagem.h"
 
+
+/* =========================================================
+   CONSTRUTOR
+========================================================= */
+
 FilaMensagem::FilaMensagem()
 {
     inicio = 0;
+
     fim = 0;
+
     quantidade = 0;
 }
 
+
+/* =========================================================
+   ADICIONAR
+========================================================= */
+
 bool FilaMensagem::adicionar(
-    Mensagem msg
+    const Mensagem& mensagem
 )
 {
-    if(quantidade >= 10)
+    if(cheia())
+    {
         return false;
+    }
 
-    fila[fim] = msg;
 
-    fim = (fim + 1) % 10;
+    fila[fim] = mensagem;
+
+
+    fim++;
+
+    if(
+        fim >= FILA_MENSAGENS_CAPACIDADE
+    )
+    {
+        fim = 0;
+    }
+
 
     quantidade++;
 
     return true;
 }
 
+
+/* =========================================================
+   OBTER
+========================================================= */
+
 bool FilaMensagem::obter(
-    Mensagem &msg
+    Mensagem& mensagem
 )
 {
-    if(quantidade == 0)
+    if(vazia())
+    {
         return false;
+    }
 
-    msg = fila[inicio];
 
-    inicio = (inicio + 1) % 10;
+    mensagem = fila[inicio];
+
+
+    inicio++;
+
+    if(
+        inicio >= FILA_MENSAGENS_CAPACIDADE
+    )
+    {
+        inicio = 0;
+    }
+
 
     quantidade--;
 
     return true;
 }
 
-int FilaMensagem::tamanho()
+
+/* =========================================================
+   VAZIA
+========================================================= */
+
+bool FilaMensagem::vazia() const
+{
+    return quantidade == 0;
+}
+
+
+/* =========================================================
+   CHEIA
+========================================================= */
+
+bool FilaMensagem::cheia() const
+{
+    return quantidade >=
+           FILA_MENSAGENS_CAPACIDADE;
+}
+
+
+/* =========================================================
+   TAMANHO
+========================================================= */
+
+int FilaMensagem::tamanho() const
 {
     return quantidade;
+}
+
+
+/* =========================================================
+   LIMPAR
+========================================================= */
+
+void FilaMensagem::limpar()
+{
+    inicio = 0;
+
+    fim = 0;
+
+    quantidade = 0;
 }

@@ -1,32 +1,72 @@
 #ifndef MENSAGEM_SERVICE_H
 #define MENSAGEM_SERVICE_H
 
-#include "mensagem.h"
 #include "filaMensagem.h"
 
-#include "../lora/loraService.h"
 
 class MensagemService
 {
 private:
 
-    FilaMensagem fila;
+    FilaMensagem filaSaida;
 
-    LoRaService* lora;
+    FilaMensagem filaEntrada;
+
 
 public:
 
     MensagemService();
 
-    void iniciar(
-        LoRaService* servicoLoRa
-    );
+
+    // -----------------------------------------------------
+    // ENVIO
+    // -----------------------------------------------------
 
     bool enviar(
-        Mensagem msg
+        const Mensagem& mensagem
     );
 
-    void atualizar();
+
+    // -----------------------------------------------------
+    // RECEBIMENTO
+    // -----------------------------------------------------
+
+    bool receber(
+        const Mensagem& mensagem
+    );
+
+
+    // -----------------------------------------------------
+    // LEITURA DAS FILAS
+    // -----------------------------------------------------
+
+    bool obterSaida(
+        Mensagem& mensagem
+    );
+
+    bool obterEntrada(
+        Mensagem& mensagem
+    );
+
+
+    // -----------------------------------------------------
+    // ESTADO
+    // -----------------------------------------------------
+
+    bool possuiMensagensSaida() const;
+
+    bool possuiMensagensEntrada() const;
+
+    int quantidadeSaida() const;
+
+    int quantidadeEntrada() const;
+
+
+    // -----------------------------------------------------
+    // LIMPEZA
+    // -----------------------------------------------------
+
+    void limpar();
 };
 
 #endif

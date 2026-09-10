@@ -11,8 +11,15 @@ enum TipoEvento
 
     EVENTO_RX,
 
-    EVENTO_CONTATO_TROCADO
+    EVENTO_CONTATO_TROCADO,
+
+    EVENTO_MENSAGEM_ENVIADA,
+
+    EVENTO_MENSAGEM_RECEBIDA,
+
+    EVENTO_ACK
 };
+
 
 struct Evento
 {
@@ -20,5 +27,6 @@ struct Evento
 
     char tecla;
 };
+
 
 #endif

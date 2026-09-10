@@ -1,13 +1,15 @@
 #ifndef FILA_MENSAGEM_H
 #define FILA_MENSAGEM_H
 
-#include "mensagem.h"
+#include "../model/mensagem.h"
+
+#define FILA_MENSAGENS_CAPACIDADE 64
 
 class FilaMensagem
 {
 private:
 
-    Mensagem fila[10];
+    Mensagem fila[FILA_MENSAGENS_CAPACIDADE];
 
     int inicio;
 
@@ -20,14 +22,20 @@ public:
     FilaMensagem();
 
     bool adicionar(
-        Mensagem msg
+        const Mensagem& mensagem
     );
 
     bool obter(
-        Mensagem &msg
+        Mensagem& mensagem
     );
 
-    int tamanho();
+    bool vazia() const;
+
+    bool cheia() const;
+
+    int tamanho() const;
+
+    void limpar();
 };
 
 #endif

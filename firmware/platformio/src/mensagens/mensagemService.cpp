@@ -1,50 +1,118 @@
 #include "mensagemService.h"
 
+
+/* =========================================================
+   CONSTRUTOR
+========================================================= */
+
 MensagemService::MensagemService()
 {
-    lora = nullptr;
 }
 
-void MensagemService::iniciar(
-    LoRaService* servicoLoRa
-)
-{
-    lora = servicoLoRa;
-}
+
+/* =========================================================
+   ENVIAR
+========================================================= */
 
 bool MensagemService::enviar(
-    Mensagem msg
+    const Mensagem& mensagem
 )
 {
-    if(lora == nullptr)
-        return false;
-
-    if(lora->ocupado())
-        return false;
-
-    return fila.adicionar(
-        msg
+    return filaSaida.adicionar(
+        mensagem
     );
 }
 
-void MensagemService::atualizar()
+
+/* =========================================================
+   RECEBER
+========================================================= */
+
+bool MensagemService::receber(
+    const Mensagem& mensagem
+)
 {
-    if(lora == nullptr)
-        return;
+    return filaEntrada.adicionar(
+        mensagem
+    );
+}
 
-    lora->atualizar();
 
-    if(lora->ocupado())
-        return;
+/* =========================================================
+   OBTER SAÍDA
+========================================================= */
 
-    Mensagem msg;
+bool MensagemService::obterSaida(
+    Mensagem& mensagem
+)
+{
+    return filaSaida.obter(
+        mensagem
+    );
+}
 
-    if(
-        fila.obter(msg)
-    )
-    {
-        lora->enviar(
-            msg
-        );
-    }
+
+/* =========================================================
+   OBTER ENTRADA
+========================================================= */
+
+bool MensagemService::obterEntrada(
+    Mensagem& mensagem
+)
+{
+    return filaEntrada.obter(
+        mensagem
+    );
+}
+
+
+/* =========================================================
+   POSSUI SAÍDA
+========================================================= */
+
+bool MensagemService::possuiMensagensSaida() const
+{
+    return !filaSaida.vazia();
+}
+
+
+/* =========================================================
+   POSSUI ENTRADA
+========================================================= */
+
+bool MensagemService::possuiMensagensEntrada() const
+{
+    return !filaEntrada.vazia();
+}
+
+
+/* =========================================================
+   QUANTIDADE DE SAÍDA
+========================================================= */
+
+int MensagemService::quantidadeSaida() const
+{
+    return filaSaida.tamanho();
+}
+
+
+/* =========================================================
+   QUANTIDADE DE ENTRADA
+========================================================= */
+
+int MensagemService::quantidadeEntrada() const
+{
+    return filaEntrada.tamanho();
+}
+
+
+/* =========================================================
+   LIMPAR
+========================================================= */
+
+void MensagemService::limpar()
+{
+    filaSaida.limpar();
+
+    filaEntrada.limpar();
 }
