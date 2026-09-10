@@ -12,33 +12,17 @@ private:
 
     FilaMensagem filaEntrada;
 
-
 public:
 
     MensagemService();
-
-
-    // -----------------------------------------------------
-    // ENVIO
-    // -----------------------------------------------------
 
     bool enviar(
         const Mensagem& mensagem
     );
 
-
-    // -----------------------------------------------------
-    // RECEBIMENTO
-    // -----------------------------------------------------
-
     bool receber(
         const Mensagem& mensagem
     );
-
-
-    // -----------------------------------------------------
-    // LEITURA DAS FILAS
-    // -----------------------------------------------------
 
     bool obterSaida(
         Mensagem& mensagem
@@ -48,11 +32,6 @@ public:
         Mensagem& mensagem
     );
 
-
-    // -----------------------------------------------------
-    // ESTADO
-    // -----------------------------------------------------
-
     bool possuiMensagensSaida() const;
 
     bool possuiMensagensEntrada() const;
@@ -61,10 +40,7 @@ public:
 
     int quantidadeEntrada() const;
 
-
-    // -----------------------------------------------------
-    // LIMPEZA
-    // -----------------------------------------------------
+    bool processarLoopback();
 
     void limpar();
 };

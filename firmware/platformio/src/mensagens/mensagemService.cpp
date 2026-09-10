@@ -116,3 +116,24 @@ void MensagemService::limpar()
 
     filaEntrada.limpar();
 }
+
+bool MensagemService::processarLoopback()
+{
+    Mensagem mensagem;
+
+    if(!filaSaida.obter(mensagem))
+    {
+        return false;
+    }
+
+    if(!filaEntrada.adicionar(mensagem))
+    {
+        // Se a entrada estiver cheia, devolvemos
+        // a mensagem para a saída.
+        filaSaida.adicionar(mensagem);
+
+        return false;
+    }
+
+    return true;
+}

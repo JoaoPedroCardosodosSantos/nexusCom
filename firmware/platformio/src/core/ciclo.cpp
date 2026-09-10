@@ -281,6 +281,30 @@ void sistemaAtualizar()
 
     dispatcher.processar();
 
+    if(mensagemService.processarLoopback())
+{
+    Mensagem mensagem;
+
+    if(mensagemService.obterEntrada(mensagem))
+    {
+        addRX(
+            mensagem.texto
+        );
+
+        Evento evento;
+
+        evento.tipo =
+            EVENTO_RX;
+
+        evento.tecla =
+            0;
+
+        dispatcher.adicionar(
+            evento
+        );
+    }
+}
+
 
     // =====================================================
     // COMANDOS SERIAL
