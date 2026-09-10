@@ -82,9 +82,11 @@ void sistemaInicializar()
     // INTERFACE INICIAL
     // -----------------------------------------------------
 
+    sistemaInicializarEstado();
+
     drawHomeScreen();
 
-    inicializarSistema();
+    addRX("Sistema iniciado");
 
     drawEditor(
         "",

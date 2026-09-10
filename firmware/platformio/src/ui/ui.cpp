@@ -98,16 +98,6 @@ void drawHomeScreen()
     );
 }
 
-void inicializarSistema()
-{
-    if(sistema.iniciado)
-        return;
-
-    addRX("Sistema iniciado");
-
-    sistema.iniciado = true;
-}
-
 void drawStatusBar()
 {
     tft.fillRect(0, 295, 240, 25, ST77XX_BLUE);
