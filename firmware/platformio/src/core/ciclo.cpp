@@ -22,6 +22,9 @@
 #include "../teclado/t9.h"
 #include "../teclado/entrada.h"
 
+#include "../mensagens/mensagemService.h"
+#include "../model/mensagem.h"
+
 
 /* =========================================================
    INSTÂNCIAS DO SISTEMA
@@ -35,15 +38,7 @@ Editor editor;
 
 EditorT9 t9;
 
-
-/* =========================================================
-   ESTADO TEMPORÁRIO DO LoRa SIMULADO
-========================================================= */
-
-unsigned long respostaTempo = 0;
-
-bool respostaPendente = false;
-
+MensagemService mensagemService;
 
 /* =========================================================
    INICIALIZAÇÃO
@@ -137,12 +132,10 @@ static void processarEnvio(char tecla)
         return;
     }
 
-
     if(telaAtual != TELA_MENSAGENS)
     {
         return;
     }
-
 
     if(editor.vazio())
     {
@@ -150,8 +143,44 @@ static void processarEnvio(char tecla)
     }
 
 
+    Mensagem mensagem = {};
+
+    strncpy(
+        mensagem.texto,
+        editor.obter(),
+        sizeof(mensagem.texto) - 1
+    );
+
+    mensagem.texto[
+        sizeof(mensagem.texto) - 1
+    ] = '\0';
+
+
+    mensagem.remetente = 0;
+
+    mensagem.destinatario =
+        sistema.contatoSelecionado;
+
+    mensagem.confirmada = false;
+
+
+    if(
+        !mensagemService.enviar(
+            mensagem
+        )
+    )
+    {
+        LOG_INFO(
+            "MENSAGEM",
+            "Fila de saida cheia"
+        );
+
+        return;
+    }
+
+
     addTX(
-        editor.obter()
+        mensagem.texto
     );
 
 
@@ -169,13 +198,6 @@ static void processarEnvio(char tecla)
     );
 
 
-    respostaTempo =
-        millis();
-
-    respostaPendente =
-        true;
-
-
     editor.limpar();
 
     t9.confirmar();
@@ -186,51 +208,6 @@ static void processarEnvio(char tecla)
         sistema.modoNumerico
     );
 }
-
-
-/* =========================================================
-   LoRa SIMULADO
-========================================================= */
-
-static void processarLoRaSimulado()
-{
-    if(!respostaPendente)
-    {
-        return;
-    }
-
-
-    if(
-        millis() - respostaTempo <= 2000
-    )
-    {
-        return;
-    }
-
-
-    addRX(
-        "ACK"
-    );
-
-
-    Evento evento;
-
-    evento.tipo =
-        EVENTO_RX;
-
-    evento.tecla =
-        0;
-
-
-    dispatcher.adicionar(
-        evento
-    );
-
-
-    respostaPendente =
-        false;
-}
-
 
 /* =========================================================
    CICLO PRINCIPAL
@@ -297,14 +274,6 @@ void sistemaAtualizar()
             }
         }
     }
-
-
-    // =====================================================
-    // COMUNICAÇÃO LoRa SIMULADA
-    // =====================================================
-
-    processarLoRaSimulado();
-
 
     // =====================================================
     // DISPATCHER
