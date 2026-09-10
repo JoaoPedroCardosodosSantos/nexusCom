@@ -1,15 +1,20 @@
 #include "pcf8574.h"
 
+#include "../config/pinos.h"
+
 PCF8574::PCF8574(
     uint8_t addr
 )
 {
-    endereco=addr;
+    endereco = addr;
 }
 
 void PCF8574::iniciar()
 {
-    Wire.begin();
+    Wire.begin(
+        I2C_SDA,
+        I2C_SCL
+    );
 
     escrever(0xFF);
 }
@@ -22,7 +27,9 @@ void PCF8574::escrever(
         endereco
     );
 
-    Wire.write(valor);
+    Wire.write(
+        valor
+    );
 
     Wire.endTransmission();
 }

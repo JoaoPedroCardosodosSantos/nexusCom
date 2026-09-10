@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-class T9
+class EditorT9
 {
 private:
 
@@ -17,7 +17,7 @@ private:
 
 public:
 
-    T9();
+    EditorT9();
 
     bool mesmaSequencia(char tecla);
 

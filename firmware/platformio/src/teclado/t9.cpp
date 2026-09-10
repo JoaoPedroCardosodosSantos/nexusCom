@@ -16,7 +16,7 @@ const char* mapaT9[] =
     "WXYZ"
 };
 
-T9::T9()
+EditorT9::EditorT9()
 {
     ultimaTecla=0;
 
@@ -27,7 +27,7 @@ T9::T9()
     composicaoAtiva=false;
 }
 
-bool T9::mesmaSequencia(
+bool EditorT9::mesmaSequencia(
     char tecla
 )
 {
@@ -58,7 +58,7 @@ bool T9::mesmaSequencia(
     return false;
 }
 
-char T9::converter(
+char EditorT9::converter(
     char tecla
 )
 {
@@ -78,7 +78,7 @@ char T9::converter(
     ];
 }
 
-void T9::confirmar()
+void EditorT9::confirmar()
 {
     composicaoAtiva=false;
 
@@ -87,7 +87,7 @@ void T9::confirmar()
     indice=0;
 }
 
-bool T9::emComposicao()
+bool EditorT9::emComposicao()
 {
     return composicaoAtiva;
 }

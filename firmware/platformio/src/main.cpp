@@ -2,6 +2,10 @@
 
 #include "core/dispatcher.h"
 #include "core/sistema.h"
+
+#include "core/debug/logger.h"
+#include "core/serial/commandManager.h"
+
 #include "ui/boot.h"
 
 #include "display/display.h"
@@ -23,18 +27,37 @@
 Dispatcher dispatcher;
 Teclado teclado;
 Editor editor;
-T9 t9;
+EditorT9 t9;
 
 unsigned long respostaTempo = 0;
 bool respostaPendente = false;
 
 void setup()
 {
+    logger.begin(115200);
+
+    LOG_INFO(
+        "SISTEMA",
+        "NexusCom iniciando"
+    );
+
+    commandManager.begin();
+
     initDisplay();
+
+    LOG_INFO(
+        "DISPLAY",
+        "ST7789 inicializado"
+    );
 
     bootAnimation();
 
     teclado.iniciar();
+
+    LOG_INFO(
+        "TECLADO",
+        "Teclado inicializado"
+    );
 
     drawHomeScreen();
 
@@ -43,6 +66,11 @@ void setup()
     drawEditor(
         "",
         sistema.modoNumerico
+    );
+
+    LOG_INFO(
+        "SISTEMA",
+        "Inicializacao concluida"
     );
 }
 
@@ -346,4 +374,6 @@ void loop()
 
     dispatcher.processar();
 
+    commandManager.process();
+    
 }

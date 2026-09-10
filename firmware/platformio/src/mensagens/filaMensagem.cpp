@@ -2,23 +2,21 @@
 
 FilaMensagem::FilaMensagem()
 {
-    inicio=0;
-
-    fim=0;
-
-    quantidade=0;
+    inicio = 0;
+    fim = 0;
+    quantidade = 0;
 }
 
 bool FilaMensagem::adicionar(
     Mensagem msg
 )
 {
-    if(quantidade>=10)
+    if(quantidade >= 10)
         return false;
 
-    fila[fim]=msg;
+    fila[fim] = msg;
 
-    fim=(fim+1)%10;
+    fim = (fim + 1) % 10;
 
     quantidade++;
 
@@ -29,12 +27,12 @@ bool FilaMensagem::obter(
     Mensagem &msg
 )
 {
-    if(quantidade==0)
+    if(quantidade == 0)
         return false;
 
-    msg=fila[inicio];
+    msg = fila[inicio];
 
-    inicio=(inicio+1)%10;
+    inicio = (inicio + 1) % 10;
 
     quantidade--;
 
