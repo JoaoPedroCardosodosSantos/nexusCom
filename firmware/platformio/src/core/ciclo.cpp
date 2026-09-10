@@ -20,6 +20,7 @@
 #include "../teclado/teclado.h"
 #include "../teclado/editor.h"
 #include "../teclado/t9.h"
+#include "../teclado/entrada.h"
 
 
 /* =========================================================
@@ -126,190 +127,64 @@ void sistemaInicializar()
 
 
 /* =========================================================
-   PROCESSAMENTO DE MENSAGENS
+   ENVIO SIMULADO
 ========================================================= */
 
-static void processarMensagem(char tecla)
+static void processarEnvio(char tecla)
 {
+    if(tecla != '#')
+    {
+        return;
+    }
+
+
     if(telaAtual != TELA_MENSAGENS)
     {
         return;
     }
 
 
-    // =====================================================
-    // TECLAS 1-9
-    // =====================================================
-
-    if(
-        tecla >= '1' &&
-        tecla <= '9'
-    )
+    if(editor.vazio())
     {
-        if(sistema.modoNumerico)
-        {
-            editor.inserir(
-                tecla
-            );
-
-            t9.confirmar();
-
-            drawEditor(
-                editor.obter(),
-                sistema.modoNumerico
-            );
-        }
-        else
-        {
-            bool mesma =
-                t9.mesmaSequencia(
-                    tecla
-                );
-
-            char letra =
-                t9.converter(
-                    tecla
-                );
-
-
-            if(mesma)
-            {
-                editor.substituirUltimo(
-                    letra
-                );
-            }
-            else
-            {
-                editor.inserir(
-                    letra
-                );
-            }
-
-
-            drawEditor(
-                editor.obter(),
-                sistema.modoNumerico
-            );
-        }
-
         return;
     }
 
 
-    // =====================================================
-    // * — MODO NUMÉRICO
-    // =====================================================
-
-    if(tecla == '*')
-    {
-        sistema.modoNumerico =
-            !sistema.modoNumerico;
-
-        t9.confirmar();
-
-        drawEditor(
-            editor.obter(),
-            sistema.modoNumerico
-        );
-
-        return;
-    }
+    addTX(
+        editor.obter()
+    );
 
 
-    // =====================================================
-    // 0 — ESPAÇO / ZERO
-    // =====================================================
+    Evento evento;
 
-    if(tecla == '0')
-    {
-        if(sistema.modoNumerico)
-        {
-            editor.inserir(
-                '0'
-            );
-        }
-        else
-        {
-            editor.espaco();
-        }
+    evento.tipo =
+        EVENTO_TX;
 
-        t9.confirmar();
-
-        drawEditor(
-            editor.obter(),
-            sistema.modoNumerico
-        );
-
-        return;
-    }
+    evento.tecla =
+        0;
 
 
-    // =====================================================
-    // # — ENVIAR
-    // =====================================================
-
-    if(tecla == '#')
-    {
-        if(!editor.vazio())
-        {
-            addTX(
-                editor.obter()
-            );
+    dispatcher.adicionar(
+        evento
+    );
 
 
-            Evento evento;
+    respostaTempo =
+        millis();
 
-            evento.tipo =
-                EVENTO_TX;
-
-            evento.tecla =
-                0;
+    respostaPendente =
+        true;
 
 
-            dispatcher.adicionar(
-                evento
-            );
+    editor.limpar();
+
+    t9.confirmar();
 
 
-            respostaTempo =
-                millis();
-
-            respostaPendente =
-                true;
-
-
-            editor.limpar();
-
-            t9.confirmar();
-
-
-            drawEditor(
-                editor.obter(),
-                sistema.modoNumerico
-            );
-        }
-
-        return;
-    }
-
-
-    // =====================================================
-    // C — APAGAR
-    // =====================================================
-
-    if(tecla == 'C')
-    {
-        editor.apagarUltimo();
-
-        t9.confirmar();
-
-        drawEditor(
-            editor.obter(),
-            sistema.modoNumerico
-        );
-
-        return;
-    }
+    drawEditor(
+        editor.obter(),
+        sistema.modoNumerico
+    );
 }
 
 
@@ -381,18 +256,10 @@ void sistemaAtualizar()
             );
 
 
-        // -------------------------------------------------
-        // TECLA CONSUMIDA PELA NAVEGAÇÃO
-        // -------------------------------------------------
-
         if(
             resultado != NAVEGACAO_NENHUMA
         )
         {
-            // ---------------------------------------------
-            // TROCA DE CONTATO
-            // ---------------------------------------------
-
             if(
                 resultado == NAVEGACAO_CONTATO
             )
@@ -410,19 +277,25 @@ void sistemaAtualizar()
                     evento
                 );
             }
-
-
-            return;
         }
+        else
+        {
+            bool processada =
+                processarEntradaMensagem(
+                    tecla,
+                    editor,
+                    t9,
+                    sistema.modoNumerico
+                );
 
 
-        // -------------------------------------------------
-        // PROCESSAMENTO DE MENSAGEM
-        // -------------------------------------------------
-
-        processarMensagem(
-            tecla
-        );
+            if(!processada)
+            {
+                processarEnvio(
+                    tecla
+                );
+            }
+        }
     }
 
 
