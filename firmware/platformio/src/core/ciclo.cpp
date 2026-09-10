@@ -25,6 +25,8 @@
 #include "../mensagens/mensagemService.h"
 #include "../model/mensagem.h"
 
+#include "../transporte/loopback.h"
+
 
 /* =========================================================
    INSTÂNCIAS DO SISTEMA
@@ -39,6 +41,8 @@ Editor editor;
 EditorT9 t9;
 
 MensagemService mensagemService;
+
+Loopback loopback;
 
 /* =========================================================
    INICIALIZAÇÃO
@@ -97,6 +101,13 @@ void sistemaInicializar()
 
     sistemaInicializarEstado();
 
+    // -----------------------------------------------------
+    // TRANSPORTE
+    // -----------------------------------------------------
+
+    mensagemService.definirTransporte(
+        &loopback
+    );
 
     // -----------------------------------------------------
     // INTERFACE INICIAL
@@ -122,7 +133,7 @@ void sistemaInicializar()
 
 
 /* =========================================================
-   ENVIO SIMULADO
+   ENVIO DE MENSAGEM
 ========================================================= */
 
 static void processarEnvio(char tecla)
@@ -281,28 +292,27 @@ void sistemaAtualizar()
 
     dispatcher.processar();
 
-    if(mensagemService.processarLoopback())
-{
+    mensagemService.atualizar();
+
     Mensagem mensagem;
 
-    if(mensagemService.obterEntrada(mensagem))
-    {
-        addRX(
-            mensagem.texto
-        );
+if(mensagemService.obterEntrada(mensagem))
+{
+    addRX(
+        mensagem.texto
+    );
 
-        Evento evento;
+    Evento evento;
 
-        evento.tipo =
-            EVENTO_RX;
+    evento.tipo =
+        EVENTO_RX;
 
-        evento.tecla =
-            0;
+    evento.tecla =
+        0;
 
-        dispatcher.adicionar(
-            evento
-        );
-    }
+    dispatcher.adicionar(
+        evento
+    );
 }
 
 

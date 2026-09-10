@@ -1,18 +1,19 @@
 #include "mensagemService.h"
 
 
-/* =========================================================
-   CONSTRUTOR
-========================================================= */
-
 MensagemService::MensagemService()
 {
+    transporte = nullptr;
 }
 
 
-/* =========================================================
-   ENVIAR
-========================================================= */
+void MensagemService::definirTransporte(
+    Transporte* novoTransporte
+)
+{
+    transporte = novoTransporte;
+}
+
 
 bool MensagemService::enviar(
     const Mensagem& mensagem
@@ -24,10 +25,6 @@ bool MensagemService::enviar(
 }
 
 
-/* =========================================================
-   RECEBER
-========================================================= */
-
 bool MensagemService::receber(
     const Mensagem& mensagem
 )
@@ -37,10 +34,6 @@ bool MensagemService::receber(
     );
 }
 
-
-/* =========================================================
-   OBTER SAÍDA
-========================================================= */
 
 bool MensagemService::obterSaida(
     Mensagem& mensagem
@@ -52,10 +45,6 @@ bool MensagemService::obterSaida(
 }
 
 
-/* =========================================================
-   OBTER ENTRADA
-========================================================= */
-
 bool MensagemService::obterEntrada(
     Mensagem& mensagem
 )
@@ -66,29 +55,17 @@ bool MensagemService::obterEntrada(
 }
 
 
-/* =========================================================
-   POSSUI SAÍDA
-========================================================= */
-
 bool MensagemService::possuiMensagensSaida() const
 {
-    return !filaSaida.vazia();
+    return filaSaida.tamanho() > 0;
 }
 
-
-/* =========================================================
-   POSSUI ENTRADA
-========================================================= */
 
 bool MensagemService::possuiMensagensEntrada() const
 {
-    return !filaEntrada.vazia();
+    return filaEntrada.tamanho() > 0;
 }
 
-
-/* =========================================================
-   QUANTIDADE DE SAÍDA
-========================================================= */
 
 int MensagemService::quantidadeSaida() const
 {
@@ -96,44 +73,59 @@ int MensagemService::quantidadeSaida() const
 }
 
 
-/* =========================================================
-   QUANTIDADE DE ENTRADA
-========================================================= */
-
 int MensagemService::quantidadeEntrada() const
 {
     return filaEntrada.tamanho();
 }
 
 
-/* =========================================================
-   LIMPAR
-========================================================= */
+void MensagemService::atualizar()
+{
+    if(transporte == nullptr)
+        return;
+
+    transporte->atualizar();
+
+    if(transporte->disponivel())
+    {
+        Mensagem mensagem;
+
+        if(filaSaida.obter(mensagem))
+        {
+            LOG_INFO(
+                "MENSAGEM",
+                "Enviando para transporte"
+            );
+
+            if(!transporte->enviar(mensagem))
+            {
+                LOG_INFO(
+                    "MENSAGEM",
+                    "Transporte recusou mensagem"
+                );
+
+                filaSaida.adicionar(mensagem);
+            }
+        }
+    }
+
+    Mensagem recebida;
+
+    if(transporte->receber(recebida))
+    {
+        LOG_INFO(
+            "MENSAGEM",
+            "Mensagem recebida do transporte"
+        );
+
+        filaEntrada.adicionar(recebida);
+    }
+}
+
 
 void MensagemService::limpar()
 {
     filaSaida.limpar();
 
     filaEntrada.limpar();
-}
-
-bool MensagemService::processarLoopback()
-{
-    Mensagem mensagem;
-
-    if(!filaSaida.obter(mensagem))
-    {
-        return false;
-    }
-
-    if(!filaEntrada.adicionar(mensagem))
-    {
-        // Se a entrada estiver cheia, devolvemos
-        // a mensagem para a saída.
-        filaSaida.adicionar(mensagem);
-
-        return false;
-    }
-
-    return true;
 }

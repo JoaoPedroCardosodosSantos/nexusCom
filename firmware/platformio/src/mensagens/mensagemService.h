@@ -2,7 +2,8 @@
 #define MENSAGEM_SERVICE_H
 
 #include "filaMensagem.h"
-
+#include "../transporte/transporte.h"
+#include "../core/debug/logger.h"
 
 class MensagemService
 {
@@ -12,9 +13,16 @@ private:
 
     FilaMensagem filaEntrada;
 
+    Transporte* transporte;
+
+
 public:
 
     MensagemService();
+
+    void definirTransporte(
+        Transporte* transporte
+    );
 
     bool enviar(
         const Mensagem& mensagem
@@ -40,7 +48,7 @@ public:
 
     int quantidadeEntrada() const;
 
-    bool processarLoopback();
+    void atualizar();
 
     void limpar();
 };
